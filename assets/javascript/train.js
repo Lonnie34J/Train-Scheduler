@@ -10,13 +10,13 @@
 var database = firebase.database();
 
     
-$("addTrainBtn").on("click", function(){
-    
+$("#addTrainBtn").on("click", function(){
+    event.preventDefault();
     //gets user input
     
     var trainName = $("#trainNameInput").val().trim();
     var userDestination = $("#destinationInput").val().trim();
-    var userTime = moment($("#timeInput").val().trim(), "hh:mm");
+    var userTime = $("#timeInput").val().trim();
     var userFrequency = $("#frequencyInput").val().trim();
     
     
@@ -33,5 +33,24 @@ $("addTrainBtn").on("click", function(){
     
     alert("train added");
     
-    return false;
+    //clear boxes
+    
+    $("#trainNameInput").val("");
+    $("#destinationInput").val("");
+    $("#timeInput").val("");
+    $("#frequencyInput").val("");
+    
+});
+
+database.ref().on("child_added", function(childSnapshot, prevChildKey){
+    
+    console.log(childSnapshot.val());
+    
+    var trainName = childSnapshot.val().name;
+    var userDestination = childSnapshot.val().destination;
+    var userTime = childSnapshot.val().time;
+    var userFrequency = childSnapshot.val().frequency;
+    
+    $("#trainTable > tbody").append("<tr><td>" + trainName + "</td><td>" + userDestination + "</td><td>" + userFrequency + "</td><td>" + userTime + "</td></tr>");
+
 });
